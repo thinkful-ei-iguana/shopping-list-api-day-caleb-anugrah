@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import api from './api';
 import store from './store';
-import item from './item';
 
 const generateItemElement = function (item) {
   let itemTitle = `<span class="shopping-item shopping-item__checked">${item.name}</span>`;
@@ -66,17 +65,29 @@ const getItemIdFromElement = function (item) {
     .data('item-id');
 };
 
+
+
+
+
+
 const handleDeleteItemClicked = function () {
   // like in `handleItemCheckClicked`, we use event delegation
   $('.js-shopping-list').on('click', '.js-item-delete', event => {
     // get the index of the item in store.items
     const id = getItemIdFromElement(event.currentTarget);
-    // delete the item
-    store.findAndDelete(id);
-    // render the updated shopping list
-    render();
+
+    api.deleteItem(id)
+      .then(() => {
+        store.findAndDelete(id);
+        render();
+      });
+
   });
 };
+
+
+
+
 
 const handleEditShoppingItemSubmit = function () {
   $('.js-shopping-list').on('submit', '.js-edit-item', event => {
@@ -99,8 +110,17 @@ const handleEditShoppingItemSubmit = function () {
 const handleItemCheckClicked = function () {
   $('.js-shopping-list').on('click', '.js-item-toggle', event => {
     const id = getItemIdFromElement(event.currentTarget);
-    store.findAndToggleChecked(id);
-    render();
+
+    let currentItem = store.findById(id);
+
+    console.log(currentItem);
+    let opp = !currentItem.checked;
+    api.updateItem(id, {checked: opp})
+    .then(() => {
+        store.findAndUpdate(id, {checked: !currentItem.checked})
+        render();}
+        );
+   
   });
 };
 
