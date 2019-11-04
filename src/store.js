@@ -1,4 +1,4 @@
-import item from './item';
+// import item from './item';
 
 const items = [];
 let hideCheckeditems = false;
@@ -14,7 +14,7 @@ const addItem = function (item) {
 const findAndUpdate = function (id, newData) {
   let selectedItem = this.items.find(currentItem => currentItem.id === id);
   Object.assign(selectedItem, newData);
-}
+};
 
 
 const findAndDelete = function (id) {
